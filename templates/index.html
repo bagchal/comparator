@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files</title>
+    <style>
+        /* Your existing styles */
+        body {
+            text-align: center; /* Center the content */
+            padding-top: 50px; /* Add padding at the top */
+        }
+        .logo {
+            max-width: 500px; /* Maximum width for the logo */
+            margin-bottom: 50px; /* Space below the logo */
+        }
+        .file-input {
+            margin: 20px; /* Margin around the file inputs for spacing */
+            display: inline-block; /* Display block for better control */
+        }
+        .file-input label {
+            background-color: #007bff; /* Background color for the label/button */
+            color: white; /* Text color */
+            padding: 10px 20px; /* Padding inside the label/button */
+            border-radius: 5px; /* Rounded corners for aesthetics */
+            cursor: pointer; /* Change mouse cursor to pointer */
+        }
+        .file-input input {
+            display: none; /* Hide the default file input */
+        }
+        .filename {
+            display: block; /* Make sure the filenames appear below the buttons */
+            margin-top: 10px; /* Space above the filename */
+        }
+
+        /* Oval blob styles */
+        .oval-container {
+            display: inline-block;
+            text-align: center;
+            margin-right: 20px; /* Adjust spacing */
+            margin-bottom: 20px; /* Add space between buttons and blobs */
+        }
+
+        .oval-blob {
+            width: 75px; /* Reduced size by 50% */
+            height: 50px; /* Reduced size by 50% */
+            border-radius: 50%;
+            background-color: rgba(0, 123, 255, 0.5); /* Blue color with 50% opacity */
+            margin: 0 auto; /* Center the blob horizontally */
+        }
+
+        /* Gradient-filled oval blob */
+        .gradient-blob {
+            width: 75px; /* Reduced size by 50% */
+            height: 50px; /* Reduced size by 50% */
+            border-radius: 50%;
+            background: linear-gradient(to right, rgba(50, 205, 50, 1), rgba(0, 0, 0, 0.5)); /* Gradient from light green to 50% opacity black */
+            margin: 0 auto; /* Center the blob horizontally */
+        }
+
+        /* Text styles */
+        .blob-text {
+            margin-top: 5px; /* Space above text */
+        }
+
+        /* Progress bar styles */
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 0; /* Initially set width to 0 */
+            height: 5px;
+            background-color: #007bff;
+            transition: width 2s; /* Transition width property for animation */
+        }
+
+        /* Stop animation and show "Complete" text */
+        .complete {
+            background-color: #4CAF50; /* Green color */
+        }
+
+        @keyframes progressAnimation {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        /* Additional CSS as needed */
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='MSB.jpg') }}" alt="MSB Logo" class="logo">
+    <h1> PDF AS-BUILT COMPARATOR </h1>
+    <h2> UPLOAD </h2>
+    <h3> PDF and Excel </h3>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="match-string">Enter String to Match:</label>
+            <input type="text" name="match_string" id="match-string" option>
+        </div>
+        <div class="file-input">
+            <label for="pdf-upload">PDF Upload</label>
+            <input type="file" name="pdf" id="pdf-upload" onchange="updateFilename(this, 'pdf-filename')">
+            <span id="pdf-filename" class="filename"></span>
+        </div>
+        <div class="file-input">
+            <label for="excel-upload">Excel Upload</label>
+            <input type="file" name="excel" id="excel-upload" onchange="updateFilename(this, 'excel-filename')">
+            <span id="excel-filename" class="filename"></span>
+        </div>
+        <input type="submit" value="COMPARE" onclick="startProgress()">
+    </form>
+
+    <!-- Blue Oval Blob -->
+    <div class="oval-container">
+        <div class="oval-blob"></div>
+        <div class="blob-text">PDF-OUTPUT-AP matching String Input</div>
+    </div>
+
+    <!-- Gradient-filled Oval Blob -->
+    <div class="oval-container">
+        <div class="gradient-blob"></div>
+        <div class="blob-text">PDF-OUTPUT-AP matching Excel Input</div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+
+    <script>
+        function updateFilename(inputElement, outputId) {
+            if (inputElement.files.length > 0) {
+                var filename = inputElement.files[0].name;
+                document.getElementById(outputId).textContent = filename;
+            }
+        }
+
+        function startProgress() {
+            var progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = '100%'; // Set width to 100% to start the animation
+            progressBar.classList.add('complete'); // Add 'complete' class to show "Complete" text
+        }
+    </script>
+</body>
+</html>
